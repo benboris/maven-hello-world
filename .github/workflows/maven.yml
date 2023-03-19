@@ -1,0 +1,59 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - run : ls
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: maven
+        
+        
+    - name: Increase patch version
+      run: |
+          
+        
+          CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f myapp/pom.xml)
+          echo "Current version is: $CURRENT_VERSION"
+          # Update the version in the pom.xml file
+          NEW_VERSION=$(echo ${CURRENT_VERSION} | awk -F"." '{print $1"."$2"."$3+1}')
+          mvn versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false -f myapp/pom.xml
+          echo "New version is: $NEW_VERSION"
+          # Commit and push the changes
+#          git config --local user.email "boris.kndl@gmail.com "
+#          git config --local user.name "Ben  Kandel"
+
+#          git add myapp/pom.xml
+#          git commit -m "Update version"
+#          git push https://${{ secrets.PAT_TOKEN }}@github.com/orib17/maven-hello-world.git HEAD:main
+
+
+
+    - name: Compile code - test
+      run: mvn compile -f myapp/pom.xml
+
+    - name: Package artifact
+      run: mvn package -f myapp/pom.xml
+
+    - name: Build with Maven
+      run: |
+          mvn -B package --file myapp/pom.xml
+    - name: Create artifact item
+      uses: actions/upload-artifact@v2
+      with:
+        name: maven-hello-world-${{ github.sha }}
+        path: target/maven-hello-world.jar
