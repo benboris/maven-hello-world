@@ -8,6 +8,6 @@ public class App
 {
     public static void main( String[] args )
     {
-        c "Hello World! + "\n" My Name is Ben Kandel " );
+        System.out.println("Hello World! My Name is Ben Kandel ");
     }
 }
