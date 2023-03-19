@@ -20,7 +20,7 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
-       # cache: maven
+        #cache: maven
         
         
     - name: Increase patch version
@@ -75,4 +75,8 @@ jobs:
             
     - name: Run Docker image
       run: docker run --rm -p 8080:8080 benkandel/maven-hello-world:${{ github.event.after }}
-    
+ 
+
+
+
+
