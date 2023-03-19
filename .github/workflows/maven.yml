@@ -57,3 +57,22 @@ jobs:
       with:
         name: maven-hello-world-${{ github.sha }}
         path: target/maven-hello-world.jar
+        
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}  
+        
+    - name: Build Docker image
+      uses: docker/build-push-action@v2
+      with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: |
+            BenKandel/maven-hello-world:${{ github.event.after }} 
+            
+    - name: Run Docker image
+      run: docker run --rm -p 8080:8080 BenKandel/maven-hello-world:${{ github.event.after }}
+    
