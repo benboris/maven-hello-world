@@ -71,8 +71,8 @@ jobs:
           file: Dockerfile
           push: true
           tags: |
-            BenKandel/maven-hello-world:${{ github.event.after }} 
+            benkandel/maven-hello-world:${{ github.event.after }} 
             
     - name: Run Docker image
-      run: docker run --rm -p 8080:8080 BenKandel/maven-hello-world:${{ github.event.after }}
+      run: docker run --rm -p 8080:8080 benkandel/maven-hello-world:${{ github.event.after }}
     
